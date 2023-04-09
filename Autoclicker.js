@@ -1,31 +1,29 @@
-<html>
-  <head>
-    <style>
-      .clicker {
-        width: 100px;
-        height: 50px;
-        background-color: blue;
-        color: white;
-        text-align: center;
-        cursor: pointer;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="clicker" id="clicker">Click me</div>
-    <script>
-      const clicker = document.getElementById("clicker");
-      let clicks = 0;
-      let clicking = false;
-      clicker.addEventListener("click", function() {
-        if (!clicking) {
-          clicking = true;
-          setInterval(function() {
-            clicks++;
-            clicker.innerHTML = "Clicks: " + clicks;
-          }, 50);
-        }
-      });
-    </script>
-  </body>
-</html>
+javascript:
+
+var DELAY = 1;
+var autoClickerStyleElement = document.createElement("style");
+autoClickerStyleElement.innerHTML="*{cursor: crosshair !important;}";
+document.body.appendChild(autoClickerStyleElement);
+function addClicker(e) {
+	if(!e.isTrusted) {
+		return;
+	}
+	if(e.target.classList.contains("auto-clicker-target")) {
+		e.target.classList.remove("auto-clicker-target");
+	} else {
+		e.target.classList.add("auto-clicker-target");
+	}
+	document.body.removeChild(autoClickerStyleElement);
+	document.body.removeEventListener("click", addClicker);
+	e.preventDefault();
+	
+	autoClick(e.target);
+
+}
+function autoClick(element) {
+	if(element.classList.contains("auto-clicker-target")) {
+		element.click();
+		setTimeout(function(){ autoClick(element); }, DELAY);
+	}
+}
+document.body.addEventListener("click", addClicker, 0);
