@@ -1,29 +1,38 @@
-javascript:
+var number = 0,
+  increment = 1,
+  speed = 1000, // one second
+  tId;
 
-var DELAY = 1;
-var autoClickerStyleElement = document.createElement("style");
-autoClickerStyleElement.innerHTML="*{cursor: crosshair !important;}";
-document.body.appendChild(autoClickerStyleElement);
-function addClicker(e) {
-	if(!e.isTrusted) {
-		return;
-	}
-	if(e.target.classList.contains("auto-clicker-target")) {
-		e.target.classList.remove("auto-clicker-target");
-	} else {
-		e.target.classList.add("auto-clicker-target");
-	}
-	document.body.removeChild(autoClickerStyleElement);
-	document.body.removeEventListener("click", addClicker);
-	e.preventDefault();
-	
-	autoClick(e.target);
+function inc() {
+  clearInterval(tId); // stop anything already running
+  tId = setInterval(function() {
+    document.getElementById("number").innerHTML = number += increment;
+  }, speed);
+}
 
+function changeSpeed() {
+  speed = +this.getAttribute("data-speed"); // get attribute and convert to number
+  inc();
 }
-function autoClick(element) {
-	if(element.classList.contains("auto-clicker-target")) {
-		element.click();
-		setTimeout(function(){ autoClick(element); }, DELAY);
-	}
-}
-document.body.addEventListener("click", addClicker, 0);
+window.addEventListener("load", function() { // when page has loaded
+  document.querySelectorAll(".start").forEach(function(but) {
+    but.addEventListener("click", function() {
+      increment = +this.getAttribute("data-inc"); // get from button and convert to number 
+      inc()
+    });
+  });
+
+  document.getElementById("stop").addEventListener("click", function() { // when clicking
+    clearInterval(tId);
+  });
+
+  document.querySelectorAll(".speed").forEach(function(but) {
+    but.addEventListener("click", changeSpeed);
+  });
+
+});
+  document.querySelectorAll(".speed").forEach(function(but) {
+    but.addEventListener("click", changeSpeed);
+  });
+
+});
