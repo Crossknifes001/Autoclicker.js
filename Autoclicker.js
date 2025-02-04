@@ -1,3 +1,5 @@
+(function(){
+
 var number = 0,
   increment = 1,
   speed = 1000, // one second
@@ -36,3 +38,4 @@ window.addEventListener("load", function() { // when page has loaded
   });
 
 });
+
